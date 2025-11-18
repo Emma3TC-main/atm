@@ -20,6 +20,8 @@ class ATMApi(auth: AuthService, atm: ATMService) {
 
   val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
 
+
+
     // -----------------------
     // LOGIN
     // -----------------------
@@ -88,8 +90,13 @@ class ATMApi(auth: AuthService, atm: ATMService) {
     case GET -> Root / "transacciones" / IntVar(idCuenta) =>
       atm.listarTransacciones(idCuenta).flatMap(trxs => Ok(trxs.asJson))
 
+  }
 
-
+  // -----------------------
+  // HEALTH CHECK
+  // -----------------------
+  val health: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    case GET -> Root / "health" => Ok("OK")
   }
 
 

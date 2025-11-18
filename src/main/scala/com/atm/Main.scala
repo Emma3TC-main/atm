@@ -26,18 +26,21 @@ object Main extends IOApp {
 
       val api = new ATMApi(authService, atmService)
 
-      // Middleware CORS
       val cors = CORS.policy.withAllowOriginAll
 
-      // Rutas con captura de errores
       val httpRoutes: HttpRoutes[IO] = HttpRoutes.of[IO] { case req =>
         api.routes.run(req).value.flatMap {
-          case Some(resp) => IO.pure(resp)  // si todo va bien
+          case Some(resp) => IO.pure(resp)
           case None       => IO.pure(org.http4s.Response[IO](org.http4s.Status.NotFound))
-        }.handleErrorWith(ErrorHandler.handleThrowable _) // captura errores globales
+        }.handleErrorWith(ErrorHandler.handleThrowable _)
       }
 
-      val httpApp = cors(Router("/api" -> httpRoutes).orNotFound)
+      val httpApp = cors(
+        Router(
+          "/api" -> httpRoutes,
+          "/"    -> api.health
+        ).orNotFound
+      )
 
       EmberServerBuilder
         .default[IO]

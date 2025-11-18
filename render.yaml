@@ -5,11 +5,11 @@ services:
     plan: free
     autoDeploy: true
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
-      - key: DATABASE_URL
+      - key: DB_URL
         sync: false
-      - key: DATABASE_USER
+      - key: DB_USER
         sync: false
-      - key: DATABASE_PASSWORD
+      - key: DB_PASSWORD
         sync: false
